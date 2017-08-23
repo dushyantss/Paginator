@@ -1,28 +1,112 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
 android {
+
   compileSdkVersion 25
   buildToolsVersion "26.0.1"
+
   defaultConfig {
     minSdkVersion 15
     targetSdkVersion 25
     versionCode 1
-    versionName "0.1"
+    versionName "0.1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
+
   buildTypes {
+
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+
 }
 
 dependencies {
+
   compile fileTree(dir: 'libs', include: ['*.jar'])
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
+
   compile 'com.android.support:recyclerview-v7:25.3.1'
-  testCompile 'junit:junit:4.12'
+}
+
+task sourcesJar(type: Jar) {
+  from android.sourceSets.main.java.srcDirs
+  classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+  source = android.sourceSets.main.java.srcDirs
+  classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
+artifacts {
+  archives javadocJar
+  archives sourcesJar
+}
+
+group = 'com.dushyantss.paginator'
+version = '0.1.0'
+
+install {
+  repositories.mavenInstaller {
+    pom.project {
+      name 'paginator'
+      description 'Pagination handling for RecyclerView'
+      url 'https://github.com/dushyantss/paginator'
+      inceptionYear '2017'
+
+      packaging 'aar'
+      groupId 'com.dushyantss.paginator'
+      artifactId 'paginator'
+      version '0.1.0'
+
+      licenses {
+        license {
+          name 'The Apache Software License, Version 2.0'
+          url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+        }
+      }
+      scm {
+        connection 'https://github.com/dushyantss/paginator.git'
+        url 'https://github.com/dushyantss/paginator'
+
+      }
+      developers {
+        developer {
+          id = 'dushyantss'
+          name 'Dushyant Singh Shekhawat'
+        }
+      }
+    }
+  }
+}
+
+Properties bintrayProperties = new Properties()
+bintrayProperties.load(project.rootProject.file('bintray.properties').newDataInputStream())
+
+bintray {
+  user = bintrayProperties.getProperty('user')
+  key = bintrayProperties.get('key')
+  configurations = ['archives']
+  pkg {
+    repo = 'android'
+    name = 'paginator'
+    licenses = ['Apache-2.0']
+    vcsUrl = 'https://github.com/dushyantss/paginator.git'
+    publish = true
+    version {
+      name = '0.1.0'
+      desc = 'Paginator 0.1.0'
+      released = new Date()
+      vcsTag = 'v0.1.0'
+    }
+  }
 }
