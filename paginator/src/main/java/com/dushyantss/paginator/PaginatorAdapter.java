@@ -73,6 +73,8 @@ public class PaginatorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void setAllLoaded(boolean allLoaded) {
       if (allLoaded) {
         itemView.setVisibility(View.GONE);
+      } else {
+        itemView.setVisibility(View.VISIBLE);
       }
     }
   }
