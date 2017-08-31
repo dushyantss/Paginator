@@ -77,6 +77,7 @@ public class Paginator {
   public void start() {
     stop();
     recyclerView.addOnScrollListener(scrollListener);
+    checkAndLoadData();
   }
 
   /**
@@ -84,6 +85,7 @@ public class Paginator {
    */
   public void stop() {
     recyclerView.removeOnScrollListener(scrollListener);
+    isLoading = false;
   }
   //endregion
 
@@ -101,7 +103,6 @@ public class Paginator {
         }
       }
     };
-    checkAndLoadData();
   }
 
   private void checkAndLoadData() {
