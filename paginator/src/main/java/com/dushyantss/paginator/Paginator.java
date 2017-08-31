@@ -1,5 +1,6 @@
 package com.dushyantss.paginator;
 
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -53,7 +54,7 @@ public class Paginator {
     this.allLoaded = allLoaded;
     this.isLoading = false;
     adapter.setAllLoaded(allLoaded);
-    checkAndLoadData();
+    checkDelayed();
   }
 
   /**
@@ -77,7 +78,7 @@ public class Paginator {
   public void start() {
     stop();
     recyclerView.addOnScrollListener(scrollListener);
-    checkAndLoadData();
+    checkDelayed();
   }
 
   /**
@@ -117,6 +118,19 @@ public class Paginator {
         callback.loadMoreItems();
       }
     }
+  }
+
+  /**
+   * This one is needed because the layout pass has most probably not happened yet
+   */
+  private void checkDelayed() {
+    Handler handler = new Handler();
+    handler.postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        checkAndLoadData();
+      }
+    }, 100);
   }
   //endregion
 
