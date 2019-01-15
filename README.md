@@ -5,5 +5,5 @@ Pagination handling for RecyclerView
 ## Download
 Gradle
 ```groovy
-compile 'com.dushyantss.paginator:paginator:0.1.2'
+compile 'com.dushyantss.paginator:paginator:0.1.4'
 ```
